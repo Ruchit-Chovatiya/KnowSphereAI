@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>KnowSphere AI | Agentic Knowledge & Research Intelligence</title>
+
+    <!-- Tailwind CSS + Typography Plugin -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ink: "#080808",
+                        paper: "#F4F1EA",
+                        ember: "#FF5A1F",
+                        amber: "#FFB000",
+                        smoke: "#171717"
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            scroll-behavior: smooth;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #080808;
+            color: #f4f1ea;
+            font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ---------- Ambient background ---------- */
+
+        .ambient {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 82% 18%, rgba(255, 90, 31, .16), transparent 24%),
+                radial-gradient(circle at 18% 72%, rgba(255, 176, 0, .07), transparent 28%),
+                #080808;
+        }
+
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: -9;
+            pointer-events: none;
+            opacity: .045;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+        }
+
+        /* ---------- Header ---------- */
+
+        .site-header {
+            background: rgba(8, 8, 8, .82);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(255,255,255,.09);
+        }
+
+        .brand-mark {
+            box-shadow: 0 0 0 1px rgba(255,90,31,.25), 0 0 28px rgba(255,90,31,.16);
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 100%;
+            bottom: -8px;
+            height: 2px;
+            background: #ff5a1f;
+            transition: right .25s ease;
+        }
+
+        .nav-link:hover::after {
+            right: 0;
+        }
+
+        /* ---------- Typography ---------- */
+
+        .display {
+            letter-spacing: -.055em;
+            line-height: .95;
+        }
+
+        .ember-text {
+            color: #ff6a2a;
+        }
+
+        /* ---------- Buttons ---------- */
+
+        .ember-button {
+            background: #ff5a1f;
+            color: #080808;
+            box-shadow: 0 12px 35px rgba(255,90,31,.18);
+            transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+        }
+
+        .ember-button:hover {
+            background: #ff713e;
+            transform: translateY(-2px);
+            box-shadow: 0 16px 45px rgba(255,90,31,.28);
+        }
+
+        .outline-button {
+            border: 1px solid rgba(255,255,255,.17);
+            background: rgba(255,255,255,.035);
+            transition: all .25s ease;
+        }
+
+        .outline-button:hover {
+            border-color: rgba(255,90,31,.55);
+            background: rgba(255,90,31,.08);
+        }
+
+        /* ---------- Hero research input ---------- */
+
+        .research-shell {
+            background: #f4f1ea;
+            color: #111;
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,.08),
+                0 25px 80px rgba(0,0,0,.35),
+                0 0 80px rgba(255,90,31,.09);
+        }
+
+        .research-input {
+            background: transparent;
+            outline: none;
+        }
+
+        /* ---------- Source cards ---------- */
+
+        .source-card {
+            position: relative;
+            overflow: hidden;
+            background: #f4f1ea;
+            color: #111;
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .source-card::before {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            right: -55px;
+            top: -55px;
+            border-radius: 999px;
+            background: rgba(255,90,31,.13);
+            transition: transform .4s ease;
+        }
+
+        .source-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0,0,0,.25);
+        }
+
+        .source-card:hover::before {
+            transform: scale(1.5);
+        }
+
+        /* ---------- Sticky agent ---------- */
+
+        .agent-stage {
+            position: sticky;
+            top: 112px;
+            height: calc(100vh - 144px);
+            min-height: 580px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .agent-console {
+            position: relative;
+            width: min(100%, 520px);
+            height: 650px;
+            border: 1px solid rgba(255,255,255,.1);
+            background:
+                radial-gradient(circle at 50% 42%, rgba(255,90,31,.12), transparent 30%),
+                linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.015));
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 35px 100px rgba(0,0,0,.5);
+        }
+
+        .agent-grid {
+            position: absolute;
+            inset: 0;
+            opacity: .15;
+            background-image:
+                linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
+            background-size: 38px 38px;
+            mask-image: radial-gradient(circle at center, black, transparent 72%);
+        }
+
+        .agent-orbit {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 1px solid rgba(255,90,31,.28);
+            border-radius: 50%;
+            animation: orbitSpin 18s linear infinite;
+        }
+
+        .agent-orbit::before,
+        .agent-orbit::after {
+            content: "";
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #ff5a1f;
+            box-shadow: 0 0 25px #ff5a1f;
+        }
+
+        .agent-orbit::before {
+            top: 18px;
+            left: 50%;
+        }
+
+        .agent-orbit::after {
+            bottom: 35px;
+            right: 25px;
+            background: #ffb000;
+            box-shadow: 0 0 25px #ffb000;
+        }
+
+        @keyframes orbitSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .robot {
+            position: relative;
+            width: 170px;
+            height: 145px;
+            border: 2px solid rgba(255,255,255,.75);
+            border-radius: 42px 42px 50px 50px;
+            background: linear-gradient(145deg, #262626, #0f0f0f);
+            box-shadow:
+                inset 0 0 35px rgba(255,255,255,.05),
+                0 25px 70px rgba(0,0,0,.5),
+                0 0 65px rgba(255,90,31,.15);
+            transition: transform .7s ease, box-shadow .7s ease;
+        }
+
+        .robot::before {
+            content: "";
+            position: absolute;
+            width: 3px;
+            height: 30px;
+            left: 50%;
+            top: -31px;
+            background: #ff5a1f;
+            transform: translateX(-50%);
+        }
+
+        .robot::after {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            left: 50%;
+            top: -40px;
+            transform: translateX(-50%);
+            background: #ff5a1f;
+            box-shadow: 0 0 25px #ff5a1f;
+        }
+
+        .robot-face {
+            position: absolute;
+            inset: 22px 22px 30px;
+            border-radius: 28px;
+            background: #050505;
+            border: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        .robot-eye {
+            width: 17px;
+            height: 27px;
+            border-radius: 999px;
+            background: #ff5a1f;
+            box-shadow: 0 0 20px rgba(255,90,31,.8);
+            animation: blink 4s infinite;
+        }
+
+        @keyframes blink {
+            0%, 45%, 48%, 100% { transform: scaleY(1); }
+            46%, 47% { transform: scaleY(.12); }
+        }
+
+        .robot-body {
+            position: absolute;
+            bottom: -72px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 125px;
+            height: 85px;
+            border: 2px solid rgba(255,255,255,.65);
+            border-radius: 30px;
+            background: #111;
+        }
+
+        .robot-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffb000;
+            left: 50%;
+            top: 22px;
+            transform: translateX(-50%);
+            box-shadow: 0 0 18px #ffb000;
+        }
+
+        .agent-status {
+            transition: all .4s ease;
+        }
+
+        .knowledge-node {
+            position: absolute;
+            width: 54px;
+            height: 54px;
+            border: 1px solid rgba(255,90,31,.35);
+            background: rgba(255,90,31,.06);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffb000;
+            font-size: 11px;
+            animation: floatNode 4s ease-in-out infinite;
+        }
+
+        .node-1 { top: 17%; left: 12%; }
+        .node-2 { top: 31%; right: 10%; animation-delay: .7s; }
+        .node-3 { bottom: 25%; left: 10%; animation-delay: 1.4s; }
+        .node-4 { bottom: 17%; right: 13%; animation-delay: 2s; }
+
+        @keyframes floatNode {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .agent-message {
+            position: absolute;
+            left: 28px;
+            right: 28px;
+            bottom: 28px;
+            border: 1px solid rgba(255,255,255,.1);
+            background: rgba(8,8,8,.78);
+            backdrop-filter: blur(14px);
+            border-radius: 18px;
+            padding: 16px;
+        }
+
+        /* ---------- Scroll sections ---------- */
+
+        .story-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 110px 0;
+        }
+
+        .story-copy {
+            opacity: .38;
+            transform: translateY(30px);
+            transition: all .7s ease;
+        }
+
+        .story-copy.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step-number {
+            color: #ff5a1f;
+            font-family: ui-monospace, monospace;
+            letter-spacing: .15em;
+        }
+
+        /* ---------- Chat mockup ---------- */
+
+        .chat-window {
+            background: #f4f1ea;
+            color: #111;
+            border-radius: 28px;
+            box-shadow: 0 35px 100px rgba(0,0,0,.35);
+        }
+
+        .chat-user {
+            background: #111;
+            color: #f4f1ea;
+        }
+
+        .chat-agent {
+            background: #fff;
+            border: 1px solid #ddd7cb;
+        }
+
+        /* ---------- Mobile ---------- */
+
+        @media (max-width: 1023px) {
+            .agent-stage {
+                position: relative;
+                top: auto;
+                height: 520px;
+                min-height: 520px;
+            }
+
+            .agent-console {
+                height: 500px;
+            }
+
+            .story-section {
+                min-height: auto;
+                padding: 90px 0;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .agent-stage {
+                height: 440px;
+                min-height: 440px;
+            }
+
+            .agent-console {
+                height: 420px;
+                border-radius: 24px;
+            }
+
+            .robot {
+                transform: scale(.82);
+            }
+
+            .display {
+                letter-spacing: -.045em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient"></div>
+    <div class="grain"></div>
+
+    <!-- Header -->
+    <header class="site-header fixed inset-x-0 top-0 z-50">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+
+            <a href="#home" class="flex items-center gap-3">
+                <div class="brand-mark flex h-10 w-10 items-center justify-center rounded-xl border border-orange-400/30 bg-orange-500/10">
+                    <span class="text-lg text-orange-400">◈</span>
+                </div>
+
+                <div>
+                    <h1 class="text-base font-bold tracking-tight sm:text-lg">
+                        KnowSphere<span class="text-orange-400">AI</span>
+                    </h1>
+                    <p class="hidden text-[10px] uppercase tracking-[.18em] text-neutral-500 sm:block">
+                        Research Intelligence
+                    </p>
+                </div>
+            </a>
+
+            <nav aria-label="Main Navigation" class="hidden lg:block">
+                <ul class="flex items-center gap-8 text-sm text-neutral-400">
+                    <li><a class="nav-link hover:text-white" href="#home">Home</a></li>
+                    <li><a class="nav-link hover:text-white" href="#sources">Sources</a></li>
+                    <li><a class="nav-link hover:text-white" href="#agent">Agent</a></li>
+                    <li><a class="nav-link hover:text-white" href="#research">Research</a></li>
+                </ul>
+            </nav>
+
+            <a href="#research"
+               class="ember-button rounded-full px-5 py-2.5 text-sm font-bold">
+                Start Research →
+            </a>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Hero -->
+        <section id="home" class="relative flex min-h-screen items-center overflow-hidden pt-24">
+
+            <div class="mx-auto grid w-full max-w-7xl items-center gap-14 px-5 py-20 lg:grid-cols-[1.05fr_.95fr] lg:px-8">
+
+                <div>
+                    <div class="mb-7 inline-flex items-center gap-2 rounded-full border border-orange-400/25 bg-orange-400/5 px-4 py-2 text-xs font-medium uppercase tracking-[.16em] text-orange-300">
+                        <span class="h-2 w-2 animate-pulse rounded-full bg-orange-400"></span>
+                        Agentic Research Workspace
+                    </div>
+
+                    <h2 class="display max-w-4xl text-6xl font-black sm:text-7xl lg:text-[6.8rem]">
+                        Give your
+                        <span class="ember-text">knowledge</span>
+                        a brain.
+                    </h2>
+
+                    <p class="mt-8 max-w-2xl text-base leading-8 text-neutral-400 sm:text-lg">
+                        Bring your YouTube videos, PDFs, documents and web links together.
+                        Ask questions, retrieve relevant knowledge and explore your information
+                        through an intelligent research agent.
+                    </p>
+
+                    <!-- Visible future input -->
+                    <div class="research-shell mt-10 rounded-2xl p-2">
+                        <div class="flex flex-col gap-2 sm:flex-row">
+                            <label for="researchInput" class="sr-only">Research question</label>
+
+                            <input
+                                id="researchInput"
+                                type="text"
+                                class="research-input min-w-0 flex-1 rounded-xl px-4 py-4 text-sm placeholder:text-neutral-500"
+                                placeholder="Paste a YouTube link, add a document, or ask a question..."
+                            >
+
+                            <button
+                                id="researchButton"
+                                class="ember-button rounded-xl px-6 py-4 text-sm font-bold">
+                                Ask Agent →
+                            </button>
+                        </div>
+
+                        <div class="mt-2 flex flex-wrap gap-2 px-2 pb-1">
+                            <button class="quick-query rounded-full border border-neutral-300 px-3 py-1.5 text-xs text-neutral-600 hover:border-orange-400" data-query="Summarize this source">
+                                Summarize
+                            </button>
+                            <button class="quick-query rounded-full border border-neutral-300 px-3 py-1.5 text-xs text-neutral-600 hover:border-orange-400" data-query="Compare these sources">
+                                Compare sources
+                            </button>
+                            <button class="quick-query rounded-full border border-neutral-300 px-3 py-1.5 text-xs text-neutral-600 hover:border-orange-400" data-query="Explain this topic simply">
+                                Explain
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="heroMessage" class="mt-4 min-h-6 text-sm text-orange-300"></div>
+                </div>
+
+                <!-- Hero Agent -->
+                <div class="agent-stage">
+                    <div class="agent-console">
+                        <div class="agent-grid"></div>
+                        <div class="agent-orbit"></div>
+
+                        <div class="knowledge-node node-1">PDF</div>
+                        <div class="knowledge-node node-2">LINK</div>
+                        <div class="knowledge-node node-3">VIDEO</div>
+                        <div class="knowledge-node node-4">DATA</div>
+
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div>
+                                <div class="robot" id="heroRobot">
+                                    <div class="robot-face">
+                                        <span class="robot-eye"></span>
+                                        <span class="robot-eye"></span>
+                                    </div>
+                                    <div class="robot-body">
+                                        <span class="robot-dot"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="agent-message">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold uppercase tracking-[.15em] text-orange-400">
+                                    Research Agent
+                                </span>
+                                <span class="flex items-center gap-2 text-xs text-neutral-500">
+                                    <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                                    Online
+                                </span>
+                            </div>
+
+                            <p id="heroAgentText" class="mt-2 text-sm leading-6 text-neutral-300">
+                                Waiting for knowledge...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Sources -->
+        <section id="sources" class="bg-[#F4F1EA] py-28 text-[#111]">
+            <div class="mx-auto max-w-7xl px-5 lg:px-8">
+
+                <div class="max-w-3xl">
+                    <p class="text-xs font-bold uppercase tracking-[.2em] text-orange-600">
+                        01 / Knowledge Ingestion
+                    </p>
+
+                    <h3 class="mt-4 text-5xl font-black tracking-[-.045em] sm:text-6xl">
+                        Your information is everywhere.
+                        <span class="text-orange-600">Bring it here.</span>
+                    </h3>
+
+                    <p class="mt-6 max-w-2xl text-lg leading-8 text-neutral-600">
+                        Build one knowledge workspace from the sources you already use
+                        for learning, development and research.
+                    </p>
+                </div>
+
+                <div class="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+
+                    <article class="source-card rounded-3xl p-7">
+                        <div class="relative z-10">
+                            <div class="text-3xl">▶</div>
+                            <h4 class="mt-12 text-xl font-black">YouTube</h4>
+                            <p class="mt-3 text-sm leading-7 text-neutral-600">
+                                Turn video transcripts into searchable knowledge.
+                            </p>
+                            <span class="mt-6 inline-block text-xs font-bold uppercase tracking-widest text-orange-600">
+                                Video source →
+                            </span>
+                        </div>
+                    </article>
+
+                    <article class="source-card rounded-3xl p-7">
+                        <div class="relative z-10">
+                            <div class="text-3xl">▣</div>
+                            <h4 class="mt-12 text-xl font-black">PDFs</h4>
+                            <p class="mt-3 text-sm leading-7 text-neutral-600">
+                                Add research papers, lecture notes and reports.
+                            </p>
+                            <span class="mt-6 inline-block text-xs font-bold uppercase tracking-widest text-orange-600">
+                                Document source →
+                            </span>
+                        </div>
+                    </article>
+
+                    <article class="source-card rounded-3xl p-7">
+                        <div class="relative z-10">
+                            <div class="text-3xl">⌁</div>
+                            <h4 class="mt-12 text-xl font-black">Web Links</h4>
+                            <p class="mt-3 text-sm leading-7 text-neutral-600">
+                                Connect useful online resources to your research.
+                            </p>
+                            <span class="mt-6 inline-block text-xs font-bold uppercase tracking-widest text-orange-600">
+                                Web source →
+                            </span>
+                        </div>
+                    </article>
+
+                    <article class="source-card rounded-3xl p-7">
+                        <div class="relative z-10">
+                            <div class="text-3xl">✦</div>
+                            <h4 class="mt-12 text-xl font-black">Documents</h4>
+                            <p class="mt-3 text-sm leading-7 text-neutral-600">
+                                Organize notes, text files and personal resources.
+                            </p>
+                            <span class="mt-6 inline-block text-xs font-bold uppercase tracking-widest text-orange-600">
+                                Knowledge source →
+                            </span>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Sticky agent story -->
+        <section id="agent" class="bg-[#080808]">
+            <div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-2 lg:px-8">
+
+                <!-- Left scrolling story -->
+                <div>
+
+                    <article class="story-section story-copy active" data-agent="listening">
+                        <div class="max-w-xl">
+                            <p class="step-number text-xs font-bold">02 / UNDERSTAND</p>
+                            <h3 class="mt-5 text-5xl font-black tracking-[-.045em] sm:text-6xl">
+                                Tell the agent
+                                <span class="ember-text">what you need.</span>
+                            </h3>
+                            <p class="mt-6 text-lg leading-8 text-neutral-400">
+                                Start with a question, a research goal or a collection of
+                                sources. The agent interprets the task before deciding what
+                                information it needs.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="story-section story-copy" data-agent="ingesting">
+                        <div class="max-w-xl">
+                            <p class="step-number text-xs font-bold">03 / INGEST</p>
+                            <h3 class="mt-5 text-5xl font-black tracking-[-.045em] sm:text-6xl">
+                                Information becomes
+                                <span class="ember-text">knowledge.</span>
+                            </h3>
+                            <p class="mt-6 text-lg leading-8 text-neutral-400">
+                                Sources can be processed, organized and prepared for
+                                intelligent retrieval. This is where the knowledge base
+                                begins to take shape.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="story-section story-copy" data-agent="retrieving">
+                        <div class="max-w-xl">
+                            <p class="step-number text-xs font-bold">04 / RETRIEVE</p>
+                            <h3 class="mt-5 text-5xl font-black tracking-[-.045em] sm:text-6xl">
+                                Find what actually
+                                <span class="ember-text">matters.</span>
+                            </h3>
+                            <p class="mt-6 text-lg leading-8 text-neutral-400">
+                                RAG and semantic retrieval locate the most relevant pieces
+                                of information instead of forcing the user to manually search
+                                every document.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="story-section story-copy" data-agent="reasoning">
+                        <div class="max-w-xl">
+                            <p class="step-number text-xs font-bold">05 / REASON</p>
+                            <h3 class="mt-5 text-5xl font-black tracking-[-.045em] sm:text-6xl">
+                                Don't just retrieve.
+                                <span class="ember-text">Reason.</span>
+                            </h3>
+                            <p class="mt-6 text-lg leading-8 text-neutral-400">
+                                The agent can plan a task, select relevant sources, use tools,
+                                connect retrieved information and prepare a research-oriented
+                                response.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="story-section story-copy" data-agent="responding">
+                        <div class="max-w-xl">
+                            <p class="step-number text-xs font-bold">06 / RESPOND</p>
+                            <h3 class="mt-5 text-5xl font-black tracking-[-.045em] sm:text-6xl">
+                                From scattered sources
+                                <span class="ember-text">to insight.</span>
+                            </h3>
+                            <p class="mt-6 text-lg leading-8 text-neutral-400">
+                                The final result is a grounded response that helps the user
+                                understand, compare, summarize and research their own content.
+                            </p>
+                        </div>
+                    </article>
+
+                </div>
+
+                <!-- Right sticky agent -->
+                <aside class="hidden lg:block">
+                    <div class="agent-stage">
+
+                        <div class="agent-console" id="agentConsole">
+                            <div class="agent-grid"></div>
+                            <div class="agent-orbit"></div>
+
+                            <div class="knowledge-node node-1">RAG</div>
+                            <div class="knowledge-node node-2">PLAN</div>
+                            <div class="knowledge-node node-3">TOOLS</div>
+                            <div class="knowledge-node node-4">MEMORY</div>
+
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="robot" id="storyRobot">
+                                    <div class="robot-face">
+                                        <span class="robot-eye"></span>
+                                        <span class="robot-eye"></span>
+                                    </div>
+                                    <div class="robot-body">
+                                        <span class="robot-dot"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="agent-message">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-semibold uppercase tracking-[.15em] text-orange-400">
+                                        Agent state
+                                    </span>
+                                    <span id="agentState" class="agent-status text-xs text-neutral-400">
+                                        LISTENING
+                                    </span>
+                                </div>
+
+                                <p id="agentDescription" class="mt-2 text-sm leading-6 text-neutral-300">
+                                    Understanding the user's research goal...
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </aside>
+
+            </div>
+        </section>
+
+        <!-- Research chat -->
+        <section id="research" class="bg-[#F4F1EA] py-28 text-[#111]">
+            <div class="mx-auto max-w-7xl px-5 lg:px-8">
+
+                <div class="grid items-center gap-14 lg:grid-cols-[.8fr_1.2fr]">
+
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-[.2em] text-orange-600">
+                            07 / Research Workspace
+                        </p>
+
+                        <h3 class="mt-4 text-5xl font-black tracking-[-.05em] sm:text-6xl">
+                            Chat with
+                            <span class="text-orange-600">your knowledge.</span>
+                        </h3>
+
+                        <p class="mt-6 text-lg leading-8 text-neutral-600">
+                            Ask questions, compare sources, summarize content and
+                            discover relevant information through a conversational interface.
+                        </p>
+
+                        <div class="mt-8 flex flex-wrap gap-3">
+                            <span class="rounded-full bg-black px-4 py-2 text-xs font-bold text-white">
+                                RAG
+                            </span>
+                            <span class="rounded-full bg-orange-100 px-4 py-2 text-xs font-bold text-orange-700">
+                                Semantic Search
+                            </span>
+                            <span class="rounded-full bg-orange-100 px-4 py-2 text-xs font-bold text-orange-700">
+                                Agentic AI
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="chat-window overflow-hidden">
+
+                        <div class="flex items-center justify-between border-b border-neutral-200 px-6 py-5">
+                            <div>
+                                <p class="font-black">Research Agent</p>
+                                <p class="text-xs text-neutral-500">Knowledge workspace</p>
+                            </div>
+                            <span class="flex items-center gap-2 text-xs text-neutral-500">
+                                <span class="h-2 w-2 rounded-full bg-green-500"></span>
+                                Ready
+                            </span>
+                        </div>
+
+                        <div class="space-y-5 p-6">
+
+                            <div class="flex justify-end">
+                                <div class="chat-user max-w-md rounded-2xl rounded-br-md px-5 py-4 text-sm leading-6">
+                                    Compare the main ideas from my PDF and YouTube lecture.
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black text-sm text-orange-400">
+                                    ◈
+                                </div>
+
+                                <div class="chat-agent max-w-xl rounded-2xl rounded-bl-md px-5 py-4 text-sm leading-7">
+                                    I found relevant information in both sources.
+                                    I can compare their key concepts, identify
+                                    similarities and differences, and provide the
+                                    supporting sources.
+                                </div>
+                            </div>
+
+                            <div class="border-t border-neutral-200 pt-4">
+                                <div class="flex gap-2">
+                                    <input
+                                        id="chatInput"
+                                        type="text"
+                                        class="min-w-0 flex-1 rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm outline-none focus:border-orange-500"
+                                        placeholder="Ask about your knowledge..."
+                                    >
+
+                                    <button
+                                        id="chatButton"
+                                        class="ember-button rounded-xl px-5 py-3 text-sm font-bold">
+                                        →
+                                    </button>
+                                </div>
+                                <p id="chatMessage" class="mt-2 min-h-5 text-xs text-orange-600"></p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="relative overflow-hidden bg-[#080808] py-32">
+            <div class="mx-auto max-w-5xl px-5 text-center lg:px-8">
+
+                <p class="text-xs font-bold uppercase tracking-[.22em] text-orange-400">
+                    Knowledge, reimagined
+                </p>
+
+                <h3 class="display mt-6 text-6xl font-black sm:text-8xl">
+                    Ask deeper.
+                    <br>
+                    <span class="ember-text">Discover more.</span>
+                </h3>
+
+                <p class="mx-auto mt-7 max-w-2xl text-lg leading-8 text-neutral-400">
+                    A full-stack knowledge platform where documents, videos and links
+                    become an intelligent research workspace.
+                </p>
+
+                <a href="#home" class="ember-button mt-10 inline-block rounded-full px-7 py-4 font-bold">
+                    Explore the Workspace →
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-black">
+        <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left lg:px-8">
+
+            <div>
+                <p class="font-bold">
+                    KnowSphere<span class="text-orange-400">AI</span>
+                </p>
+                <p class="mt-1 text-xs text-neutral-600">
+                    Agentic Knowledge & Research Intelligence
+                </p>
+            </div>
+
+            <p class="text-xs text-neutral-600">
+                Full Stack Development Project
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // -----------------------------
+        // Hero research interaction
+        // -----------------------------
+        const researchInput = document.getElementById("researchInput");
+        const researchButton = document.getElementById("researchButton");
+        const heroMessage = document.getElementById("heroMessage");
+
+        document.querySelectorAll(".quick-query").forEach(button => {
+            button.addEventListener("click", () => {
+                researchInput.value = button.dataset.query;
+                researchInput.focus();
+            });
+        });
+
+        researchButton.addEventListener("click", () => {
+            const value = researchInput.value.trim();
+
+            if (!value) {
+                heroMessage.textContent = "Enter a research question or source first.";
+                return;
+            }
+
+            heroMessage.textContent =
+                "Demo interface: this query will connect to the Agentic RAG backend in the next development phase.";
+        });
+
+        // -----------------------------
+        // Chat demo
+        // -----------------------------
+        const chatInput = document.getElementById("chatInput");
+        const chatButton = document.getElementById("chatButton");
+        const chatMessage = document.getElementById("chatMessage");
+
+        chatButton.addEventListener("click", () => {
+            const value = chatInput.value.trim();
+
+            chatMessage.textContent = value
+                ? "Demo mode: AI response integration will be connected later."
+                : "Type a question first.";
+        });
+
+        // -----------------------------
+        // Scroll-driven agent
+        // -----------------------------
+        const storySections = document.querySelectorAll(".story-copy");
+        const agentState = document.getElementById("agentState");
+        const agentDescription = document.getElementById("agentDescription");
+        const storyRobot = document.getElementById("storyRobot");
+
+        const states = {
+            listening: {
+                title: "LISTENING",
+                description: "Understanding the user's research goal...",
+                transform: "scale(1) rotate(0deg)"
+            },
+            ingesting: {
+                title: "INGESTING",
+                description: "Processing knowledge sources and preparing them for retrieval...",
+                transform: "scale(1.05) rotate(-2deg)"
+            },
+            retrieving: {
+                title: "RETRIEVING",
+                description: "Searching the knowledge base for relevant information...",
+                transform: "scale(1) rotate(2deg)"
+            },
+            reasoning: {
+                title: "REASONING",
+                description: "Connecting retrieved information and planning the response...",
+                transform: "scale(1.08) rotate(-1deg)"
+            },
+            responding: {
+                title: "RESPONDING",
+                description: "Generating a grounded research response from the available knowledge...",
+                transform: "scale(1) rotate(0deg)"
+            }
+        };
+
+        function updateAgent(key) {
+            const state = states[key];
+            if (!state) return;
+
+            agentState.textContent = state.title;
+            agentDescription.textContent = state.description;
+            storyRobot.style.transform = state.transform;
+
+            if (key === "reasoning") {
+                storyRobot.style.boxShadow =
+                    "0 25px 70px rgba(0,0,0,.5), 0 0 100px rgba(255,176,0,.28)";
+            } else {
+                storyRobot.style.boxShadow =
+                    "0 25px 70px rgba(0,0,0,.5), 0 0 65px rgba(255,90,31,.15)";
+            }
+        }
+
+        const storyObserver = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        storySections.forEach(section => section.classList.remove("active"));
+                        entry.target.classList.add("active");
+                        updateAgent(entry.target.dataset.agent);
+                    }
+                });
+            },
+            {
+                threshold: 0.55
+            }
+        );
+
+        storySections.forEach(section => storyObserver.observe(section));
+    </script>
+
+</body>
+</html>
